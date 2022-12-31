@@ -85,7 +85,7 @@ func worker(url string, ch chan []string, fetcher Fetcher) {
 
 func coordinator(ch chan []string, fetcher Fetcher) {
 	n := 1
-	fetched := make(map[string]bool)
+	fetched := make(map[string]bool) //创建一个流动着key(string)-value(bool)键值对的channel
 	for urls := range ch {
 		for _, u := range urls {
 			if fetched[u] == false {
@@ -96,15 +96,15 @@ func coordinator(ch chan []string, fetcher Fetcher) {
 		}
 		n -= 1
 		if n == 0 {
-			break
+			break // 作用是同步?
 		}
 	}
 }
 
 func ConcurrentChannel(url string, fetcher Fetcher) {
-	ch := make(chan []string)
+	ch := make(chan []string) // 创建一个channel，其中流动的数据类型是字符串数组
 	go func() {
-		ch <- []string{url}
+		ch <- []string{url} // => [url] ?
 	}()
 	coordinator(ch, fetcher)
 }
